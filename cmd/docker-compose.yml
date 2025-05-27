@@ -1,0 +1,17 @@
+
+
+services:
+    db:
+        image: postgres:15-alpine
+        container_name: postgres-container
+        restart: always
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: store
+            POSTGRES_PASSWORD: golang
+            POSTGRES_DB: store
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+volumes:
+    pgdata:
