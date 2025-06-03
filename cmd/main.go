@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 	"store/internal/adapter/handlers"
-	"store/internal/adapter/repositorio"
+	"store/internal/adapter/repository"
 	"store/internal/controllers"
 	usecase "store/internal/usecase"
 
@@ -19,29 +19,29 @@ func main() {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Erro ao carregar arquivo .env")
+		log.Fatal("Error loading .env file")
 	}
 
-	usecaseCadastro,repoCadastro, err := injectDependency()
+	product, service, err := injectDependency()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	handlerCadastro := handlers.NewHandlerUsecase(usecaseCadastro)
+	handlerProduct := handlers.NewProductHandler(product)
 
-	consulta := usecase.NewSistemas(repoCadastro)
-	handlerConsulta := handlers.NewHandlersSistem(consulta)
+	orderService := usecase.NewOrderServices(service)
+	handlerService := handlers.NewOrderHandler(orderService)
 
 	app := fiber.New()
-	app.Post("/cadastro", handlerCadastro.HandlerPost)
-	app.Post("/consulta", handlerConsulta.HandlerPost)
-	app.Get("/cadastro", handlerCadastro.HandlerGet)
+	app.Post("/product", handlerProduct.HandlePostProduct)
+	app.Post("/service", handlerService.HandlePostOrder)
+	app.Get("/product", handlerProduct.HandleGetProduct)
 
 	log.Fatal(app.Listen(":8080"))
 }
 
-func injectDependency() (controllers.Usecase,controllers.Repositorio, error) {
+func injectDependency() (controllers.ProductService, controllers.Repository, error) {
 
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
@@ -57,14 +57,14 @@ func injectDependency() (controllers.Usecase,controllers.Repositorio, error) {
 		return nil, nil, err
 	}
 
-	repo := repositorio.NewDatabase(db)
-	cadastro := repositorio.NewRepositorio(repo)
+	repoSql := repository.NewDatabase(db)
+	repository := repository.Newrepository(repoSql)
 
-	if err := cadastro.InitSchema(); err != nil {
+	if err := repository.InitSchema(); err != nil {
 		return nil, nil, err
 	}
 
-	usecaseCadastro := usecase.NewUsecase(cadastro)
+	product := usecase.NewUsecase(repository)
 
-	return usecaseCadastro, cadastro, nil
+	return product, repository, nil
 }

@@ -7,17 +7,17 @@ type RepoSql interface {
 	Exec(query string, args ...any) (int64, error)
 }
 
-type Repositorio interface {
-	Insert(cadastro entity.Cadastro) (entity.Cadastro, error)
-	Get(cadastro string) (entity.Cadastro, error)
+type Repository interface {
+	Insert(product entity.Product) (entity.Product, error)
+	Get(product string) (entity.Product, error)
 	InitSchema() error
 }
 
-type Usecase interface {
-	Create(cadastro entity.Cadastro) (entity.Cadastro, error)
-	Read(cadastro entity.Cadastro) (entity.Cadastro, error)
+type ProductService interface {
+	CreateProduct(product entity.Product) (entity.Product, error)
+	GetProduct(product entity.Product) (entity.Product, error)
 }
 
-type Sistema interface {
-	CalculoDeItens(consulta entity.Consulta) (entity.Consulta, error)
+type OrderService interface {
+	CalculateOrder(order entity.Order) (entity.Order, error)
 }
