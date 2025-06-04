@@ -64,7 +64,7 @@ func injectDependency() (controllers.ProductService, controllers.Repository, err
 		return nil, nil, err
 	}
 
-	product := usecase.NewUsecase(repository)
+	product := usecase.NewProductService(repository)
 
 	return product, repository, nil
 }

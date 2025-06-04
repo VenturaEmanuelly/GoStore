@@ -1,11 +1,8 @@
 package usecase
 
 import (
-	"fmt"
 	"store/internal/controllers"
 	"store/internal/entity"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type orderService struct {
@@ -14,7 +11,7 @@ type orderService struct {
 
 func (o orderService) CalculateOrder(order entity.Order) (entity.Order, error) {
 
-	err := o.validateOrder(order)
+	err := order.ValidateOrder()
 	if err != nil {
 		return entity.Order{}, err
 	}
@@ -36,23 +33,6 @@ func (o orderService) CalculateOrder(order entity.Order) (entity.Order, error) {
 	order.Total = total
 
 	return order, nil
-}
-
-
-func (o orderService) validateOrder(order entity.Order) error {
-	validate := validator.New()
-	
-	err := validate.Struct(order)
-	if err != nil {
-		return err
-	}
-
-	
-	if len(order.Items) == 0 {
-		return fmt.Errorf("it is necessary to inform at least one item")
-	}
-
-	return nil
 }
 
 func NewOrderServices(repo controllers.Repository) controllers.OrderService {

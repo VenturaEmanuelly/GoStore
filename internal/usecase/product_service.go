@@ -3,8 +3,6 @@ package usecase
 import (
 	"store/internal/controllers"
 	"store/internal/entity"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type productService struct {
@@ -13,7 +11,7 @@ type productService struct {
 
 func (p productService) CreateProduct(product entity.Product) (entity.Product, error) {
 
-	err := p.ValidateProduct(product)
+	err := product.ValidateProduct()
 	if err != nil {
 		return entity.Product{}, err
 	}
@@ -26,17 +24,6 @@ func (p productService) GetProduct(product entity.Product) (entity.Product, erro
 	return p.repo.Get(product.Code)
 }
 
-func (p productService) ValidateProduct(product entity.Product) error {
-	validate := validator.New()
-
-	err := validate.Struct(product)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func NewUsecase(repo controllers.Repository) controllers.ProductService {
+func NewProductService(repo controllers.Repository) controllers.ProductService {
 	return productService{repo: repo}
 }
