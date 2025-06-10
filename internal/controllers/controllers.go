@@ -3,7 +3,7 @@ package controllers
 import "store/internal/entity"
 
 type RepoSql interface {
-	QueryRow(query string, any []any, dest ...any) error
+	QueryRow(query string, args []any, dest ...any) error
 	Exec(query string, args ...any) (int64, error)
 }
 

@@ -3,8 +3,10 @@ package handlers
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"store/internal/controllers"
 	"store/internal/entity"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -13,18 +15,32 @@ type productHandler struct {
 }
 
 func (p productHandler) HandlePostProduct(ctx *fiber.Ctx) error {
+
 	var product entity.Product
+
+	log.Println("Body recebido:", product)
+
 	err := ctx.BodyParser(&product)
 	if err != nil {
-		return err
+		log.Println("Erro ao fazer parse do body:", err)
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "JSON inválido",
+		})
 	}
+
+	log.Printf("Produto recebido: %+v\n", product)
 
 	result, err := p.product.CreateProduct(product)
 	if err != nil {
-		return err
+		log.Println("Erro ao criar produto:", err)
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Erro ao adicionar produto",
+		})
 	}
 
+	log.Println("Produto inserido com sucesso:", result)
 	return ctx.Status(200).JSON(result)
+
 }
 
 func (p productHandler) HandleGetProduct(ctx *fiber.Ctx) error {
