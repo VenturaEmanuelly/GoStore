@@ -23,16 +23,10 @@ export default function AddProduct({ onBack }) {
     }
 
     try {
-      const product = {
-        code,
-        name,
-        price: parseFloat(price),
-      };
-
-      console.log("Enviando produto:", product);
+      const product = { code, name, price: parseFloat(price) };
 
       await axios.post("http://127.0.0.1:8080/product", product);
-      
+
       setMessage("Produto adicionado com sucesso!");
       setCode("");
       setName("");
@@ -49,24 +43,46 @@ export default function AddProduct({ onBack }) {
         type="text"
         placeholder="Código"
         value={code}
-        onChange={e => setCode(e.target.value)}
-      /><br />
+        onChange={(e) => setCode(e.target.value)}
+        style={inputStyle}
+      />
       <input
         type="text"
         placeholder="Nome"
         value={name}
-        onChange={e => setName(e.target.value)}
-      /><br />
+        onChange={(e) => setName(e.target.value)}
+        style={inputStyle}
+      />
       <input
         type="text"
         placeholder="Preço"
         value={price}
-        onChange={e => setPrice(e.target.value)}
-      /><br />
-      <button onClick={handleAdd}>Adicionar Produto</button> &nbsp;
-      <button onClick={onBack}>Voltar</button>
+        onChange={(e) => setPrice(e.target.value)}
+        style={inputStyle}
+      />
+      <button onClick={handleAdd} style={btnStyle}>
+        Adicionar Produto
+      </button>
+      <button onClick={onBack} style={{ ...btnStyle, backgroundColor: "#aaa", marginLeft: 10 }}>
+        Voltar
+      </button>
+
       {message && <p style={{ color: "green" }}>{message}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }
+
+const inputStyle = {
+  display: "block",
+  width: "100%",
+  padding: "8px",
+  marginBottom: "10px",
+  fontSize: "16px",
+};
+
+const btnStyle = {
+  padding: "10px 20px",
+  fontSize: "16px",
+  cursor: "pointer",
+};

@@ -9,7 +9,6 @@ import (
 	"store/internal/adapter/repository"
 	"store/internal/controllers"
 	usecase "store/internal/usecase"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
@@ -37,14 +36,17 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*", // libera para qualquer origem (ideal só para dev)
+		AllowOrigins: "http://127.0.0.1:5173",
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 		AllowHeaders: "Origin, Content-Type, Accept",
-		AllowMethods: "GET,POST,OPTIONS",
 	}))
 
 	app.Post("/product", handlerProduct.HandlePostProduct)
 	app.Post("/service", handlerService.HandlePostOrder)
 	app.Get("/product", handlerProduct.HandleGetProduct)
+	app.Put("/product", handlerProduct.HandleUpdateProduct)
+	app.Delete("/product/:code", handlerProduct.HandleDeleteProduct)
+
 
 	log.Fatal(app.Listen(":8080"))
 }

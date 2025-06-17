@@ -10,12 +10,16 @@ type RepoSql interface {
 type Repository interface {
 	Insert(product entity.Product) (entity.Product, error)
 	Get(product string) (entity.Product, error)
+	Update(product entity.Product) (entity.Product, error)
+	Delete(product string) error
 	InitSchema() error
 }
 
 type ProductService interface {
 	CreateProduct(product entity.Product) (entity.Product, error)
 	GetProduct(product entity.Product) (entity.Product, error)
+	UpdateProduct(product entity.Product) (entity.Product, error)
+	DeleteProduct(product string) error
 }
 
 type OrderService interface {

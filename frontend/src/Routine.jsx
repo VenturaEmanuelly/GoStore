@@ -43,6 +43,7 @@ export default function Routine({ onBack }) {
             }}
           />
           <button onClick={handleAdd}>Adicionar</button>
+          <button onClick={onBack}>Voltar ao Menu</button>
         </>
       )}
 

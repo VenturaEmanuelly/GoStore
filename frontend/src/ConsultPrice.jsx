@@ -16,9 +16,7 @@ export default function ConsultPrice({ onBack }) {
     }
 
     try {
-      const response = await axios.get(
-        "http://localhost:8080/product?code=" + encodeURIComponent(code)
-      );
+      const response = await axios.get("http://localhost:8080/product?code=" + encodeURIComponent(code));
       setProduct(response.data);
     } catch (err) {
       setError(err.response?.data?.error || "Erro ao buscar produto.");
@@ -32,17 +30,40 @@ export default function ConsultPrice({ onBack }) {
         type="text"
         placeholder="Código do produto"
         value={code}
-        onChange={e => setCode(e.target.value)}
+        onChange={(e) => setCode(e.target.value)}
+        style={inputStyle}
       />
-      <button onClick={handleConsult}>Consultar</button> &nbsp;
-      <button onClick={onBack}>Voltar</button>
+      <button onClick={handleConsult} style={btnStyle}>
+        Consultar
+      </button>
+      <button onClick={onBack} style={{ ...btnStyle, backgroundColor: "#aaa", marginLeft: 10 }}>
+        Voltar
+      </button>
+
       {product && (
-        <div>
-          <p><strong>Nome:</strong> {product.name}</p>
-          <p><strong>Preço:</strong> R$ {parseFloat(product.price).toFixed(2)}</p>
+        <div style={{ marginTop: 20 }}>
+          <p>
+            <strong>Nome:</strong> {product.name}
+          </p>
+          <p>
+            <strong>Preço:</strong> R$ {parseFloat(product.price).toFixed(2)}
+          </p>
         </div>
       )}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }
+
+const inputStyle = {
+  width: "calc(100% - 22px)",
+  padding: "10px",
+  marginBottom: "10px",
+  fontSize: "16px",
+};
+
+const btnStyle = {
+  padding: "10px 20px",
+  fontSize: "16px",
+  cursor: "pointer",
+};

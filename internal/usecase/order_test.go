@@ -22,6 +22,16 @@ func (m *mockRepo) Insert(product entity.Product) (entity.Product, error) {
 	return args.Get(0).(entity.Product), args.Error(1)
 }
 
+func (m *mockRepo) Update(product entity.Product) (entity.Product, error) {
+	args := m.Called(product)
+	return args.Get(0).(entity.Product), args.Error(1)
+}
+
+func (m *mockRepo) Delete(product string) error {
+	args := m.Called(product)
+	return args.Error(1)
+}
+
 func (m *mockRepo) InitSchema() error {
 	args := m.Called()
 	return args.Error(0)
@@ -29,7 +39,7 @@ func (m *mockRepo) InitSchema() error {
 
 func TestCalculateOrder(t *testing.T) {
 	repo := new(mockRepo)
-	
+
 	service := NewOrderServices(repo)
 
 	product := entity.Product{

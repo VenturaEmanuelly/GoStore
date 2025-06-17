@@ -14,18 +14,24 @@ type orderHandler struct {
 func (o orderHandler) HandlePostOrder(ctx *fiber.Ctx) error {
 	var order entity.Order
 
-	err := ctx.BodyParser(&order)
-	if err != nil {
-		return ctx.Status(400).JSON(fiber.Map{"error": "Error parsing the body", "detail": err.Error()})
+	if err := ctx.BodyParser(&order); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":  "Invalid request body",
+			"detail": err.Error(),
+		})
 	}
 
 	result, err := o.service.CalculateOrder(order)
 	if err != nil {
-		return ctx.Status(500).JSON(fiber.Map{"error": "Error in calculation", "detail": err.Error()})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":  "Failed to calculate order",
+			"detail": err.Error(),
+		})
 	}
 
-	return ctx.Status(200).JSON(result)
+	return ctx.Status(fiber.StatusOK).JSON(result)
 }
+
 
 func NewOrderHandler(service controllers.OrderService) orderHandler {
 	return orderHandler{service: service}

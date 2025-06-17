@@ -24,6 +24,16 @@ func (p productService) GetProduct(product entity.Product) (entity.Product, erro
 	return p.repo.Get(product.Code)
 }
 
+func (p productService) UpdateProduct(product entity.Product) (entity.Product, error) {
+
+	return p.repo.Update(product)
+}
+
+func (p productService) DeleteProduct(product string) error {
+
+	return p.repo.Delete(product)
+}
+
 func NewProductService(repo controllers.Repository) controllers.ProductService {
 	return productService{repo: repo}
 }
